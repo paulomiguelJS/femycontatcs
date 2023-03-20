@@ -23,5 +23,4 @@ export default styled.button`
     background: #ccc;
     cursor: not-allowed;
   }
-
 `;
