@@ -16,7 +16,6 @@ import Loader from "../../components/Loader";
 export default function Home() {
   return (
     <Container>
-      <Loader />
       <InputSearchContainer>
         <input type="text" placeholder="Search by name" />
       </InputSearchContainer>

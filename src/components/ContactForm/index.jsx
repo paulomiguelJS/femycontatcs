@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 import Input from "../../components/Input";
 import Select from "../../components/Select";
@@ -15,7 +15,7 @@ export default function ContactForm({ buttonLabel }) {
         <Input placeholder="Name" />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error="This email is not valid">
         <Input placeholder="Email" />
       </FormGroup>
 
@@ -36,4 +36,4 @@ export default function ContactForm({ buttonLabel }) {
 
 ContactForm.protoTypes = {
   buttonLabel: PropTypes.string.isRequired,
-}
+};
