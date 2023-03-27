@@ -7,16 +7,25 @@ import Button from "../../components/Button";
 import FormGroup from "../FormGroup";
 
 import { Form, ButtonContainer } from "./styles";
+import { useState } from "react";
 
 export default function ContactForm({ buttonLabel }) {
+  const [name, setName] = useState("");
+
+  const emailInput = useRef(null);
+
   return (
     <Form>
       <FormGroup>
-        <Input placeholder="Name" />
+        <Input
+          value={name}
+          placeholder="Name"
+          onChange={(event) => setName(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup error="This email is not valid">
-        <Input placeholder="Email" />
+        <Input placeholder="Email" ref={emailInput} />
       </FormGroup>
 
       <FormGroup>
