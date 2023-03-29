@@ -6,7 +6,6 @@ import Input from "../../components/Input";
 import Select from "../../components/Select";
 import Button from "../../components/Button";
 
-
 import { Form, ButtonContainer } from "./styles";
 
 export default function ContactForm({ buttonLabel }) {
@@ -14,6 +13,21 @@ export default function ContactForm({ buttonLabel }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [category, setCategory] = useState("");
+  const [erros, setErros] = useState([]);
+
+  function handleNameChange(event) {
+    setName(event.target.value);
+    if (!event.target.value) {
+      setErros((prevState) => [
+        ...prevState,
+        { filed: "name", message: "Name is required" },
+      ]);
+    } else {
+      setErros((prevState) =>
+        prevState.filter((error) => error.field == !"name")
+      );
+    }
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -28,11 +42,7 @@ export default function ContactForm({ buttonLabel }) {
   return (
     <Form onSubmit={handleSubmit}>
       <FormGroup>
-        <Input
-          placeholder="Name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
+        <Input placeholder="Name" value={name} onChange={handleNameChange} />
       </FormGroup>
 
       <FormGroup error="This email is not valid">

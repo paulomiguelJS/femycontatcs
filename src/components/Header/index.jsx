@@ -1,13 +1,14 @@
 import { Container } from "./styles";
+import { Link } from "react-router-dom";
 
 import logo from "../../assets/images/logo.svg";
-
-console.log(logo);
 
 export default function Header() {
   return (
     <Container>
-      <img src={logo} alt="Logo" width="201" />
+      <a href="/">
+        <img src={logo} alt="Logo" width="201" />
+      </a>
     </Container>
   );
 }
