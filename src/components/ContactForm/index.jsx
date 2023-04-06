@@ -1,6 +1,8 @@
 import PropTypes, { func } from "prop-types";
 import { useState } from "react";
+
 import isEmailValid from "../../utils/isEmailValid";
+import useErrors from "../../hooks/useErrors";
 
 import FormGroup from "../FormGroup";
 import Input from "../../components/Input";
@@ -10,23 +12,18 @@ import Button from "../../components/Button";
 import { Form, ButtonContainer } from "./styles";
 
 export default function ContactForm({ buttonLabel }) {
-  const [name, setName] = usFeState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [category, setCategory] = useState("");
-  const [erros, setErros] = useState([]);
+  const { setError, removeError, getErrorMessageByFieldName } = useErrors();
 
   function handleNameChange(event) {
     setName(event.target.value);
     if (!event.target.value) {
-      setErros((prevState) => [
-        ...prevState,
-        { filed: "name", message: "Name is required." },
-      ]);
+      setError({ field: "name", message: "Name is required" });
     } else {
-      setErros((prevState) =>
-        prevState.filter((error) => error.field == !"name")
-      );
+      removeError("name");
     }
   }
 
@@ -34,27 +31,10 @@ export default function ContactForm({ buttonLabel }) {
     setEmail(event.target.value);
 
     if (event.target.value && !isEmailValid(event.target.value)) {
-      const errorAlreadyExistis = erros.find(
-        (error) => error.field === "email"
-      );
-
-      if (errorAlreadyExistis) {
-        return;
-      }
-
-      setErros((prevState) => [
-        ...prevState,
-        { filed: "email", message: "Email is not valid." },
-      ]);
+      setError({ field: "email", message: "Email is not valid." });
     } else {
-      setErros((prevState) =>
-        prevState.filter((error) => error.field == !"email")
-      );
+      removeError("email");
     }
-  }
-
-  function getErrorMessageByFieldName(fieldName) {
-    return errors.find((error) => error.field === fieldName)?.message;
   }
 
   function handleSubmit(event) {
