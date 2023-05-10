@@ -54,16 +54,12 @@ export default function Home() {
   );
 }
 
-fetch("http://localhost:3000/contacts",
-  {
-    method: "DELETE",
-    headers: new Headers({
-      "-X-App-ID": "123",
-    }),
+fetch("http://localhost:3000/contacts")
+  .then(async (response) => {
+    const json = await response.json();
+    console.log("response", response);
+    console.log("json", json);
   })
-    .then((response) => {
-      console.log("response", response);
-    })
-    .catch((error) => {
-      console.log("erro", error);
-    });
+  .catch((error) => {
+    console.log("erro", error);
+  });
