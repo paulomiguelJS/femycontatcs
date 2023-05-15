@@ -3,7 +3,7 @@ import {
   Container,
   InputSearchContainer,
   Header,
-  ListContainer,
+  ListHeader,
   Card,
 } from "./styles";
 
@@ -12,36 +12,63 @@ import edit from "../../assets/images/icons/edit.svg";
 import trash from "../../assets/images/icons/trash.svg";
 import Modal from "../../components/Modal";
 import Loader from "../../components/Loader";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Home() {
+  const [contacts, setContacts] = useState([]);
+  const [orderBy, setOrderBy] = useState("asc");
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/contacts?orderBy=${orderBy}`)
+      .then(async (response) => {
+        const json = await response.json();
+        setContacts(json);
+      })
+      .catch((error) => {
+        console.log("erro", error);
+      });
+  }, [orderBy]);
+
+  function handleToggleOrderBy() {
+    setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
+  }
+
+  console.log(orderBy);
+
   return (
     <Container>
       <InputSearchContainer>
         <input type="text" placeholder="Search by name" />
       </InputSearchContainer>
       <Header>
-        <strong>3 contacts</strong>
+        <strong>
+          {contacts.length}
+          {contacts.length === 1 ? " contact" : " contacts"}
+        </strong>
         <Link to="/new">New contact</Link>
       </Header>
-      <ListContainer>
-        <header>
-          <button type="button">
-            <span>Name</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </header>
-        <Card>
+
+      <ListHeader orderBy={orderBy}>
+        <button type="button" onClick={handleToggleOrderBy}>
+          <span>Name</span>
+          <img src={arrow} alt="Arrow" />
+        </button>
+      </ListHeader>
+
+      {contacts.map((contact) => (
+        <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
-              <strong>Paulo Miguel</strong>
-              <small>INSTAGRAM</small>
+              <strong>{contact.name}</strong>
+              {contact.category_name && <small>{contact.category_name}</small>}
             </div>
-            <span>paulomiguelblues@gmail.com</span>
-            <span>(603) 9999-9999</span>
+            <span>{contact.email}</span>
+            <span>{contact.phone}</span>
           </div>
 
           <div className="actions">
-            <Link to="/edit/123">
+            <Link to={`/edit/${contact.id}`}>
               <img src={edit} alt="Edit" />
             </Link>
             <button type="button">
@@ -49,17 +76,7 @@ export default function Home() {
             </button>
           </div>
         </Card>
-      </ListContainer>
+      ))}
     </Container>
   );
 }
-
-fetch("http://localhost:3000/contacts")
-  .then(async (response) => {
-    const json = await response.json();
-    console.log("response", response);
-    console.log("json", json);
-  })
-  .catch((error) => {
-    console.log("erro", error);
-  });
