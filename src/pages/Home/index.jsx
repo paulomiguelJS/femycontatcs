@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 
 import Modal from "../../components/Modal";
+import delay from "../../utils/delay";
 import Loader from "../../components/Loader";
 import {
   Container,
@@ -19,23 +20,30 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredContacts = useMemo(() => {
     return contacts.filter((contact) =>
       contact.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
     );
   }, [contacts, searchTerm]);
+
   useEffect(() => {
+    setIsLoading(true);
     fetch(`http://localhost:3000/contacts?orderBy=${orderBy}`)
       .then(async (response) => {
+        await delay(1000);
         const json = await response.json();
         setContacts(json);
       })
       .catch((error) => {
         console.log("erro", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [orderBy]);
-  11;
+
 
   function handleToggleOrderBy() {
     setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
@@ -47,6 +55,7 @@ export default function Home() {
 
   return (
     <Container>
+      <Loader isLoading={isLoading} />
       <InputSearchContainer>
         <input
           value={searchTerm}
