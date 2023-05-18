@@ -1,4 +1,8 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+
+import Modal from "../../components/Modal";
+import Loader from "../../components/Loader";
 import {
   Container,
   InputSearchContainer,
@@ -10,20 +14,17 @@ import {
 import arrow from "../../assets/images/icons/arrow.svg";
 import edit from "../../assets/images/icons/edit.svg";
 import trash from "../../assets/images/icons/trash.svg";
-import Modal from "../../components/Modal";
-import Loader from "../../components/Loader";
-import { useEffect } from "react";
-import { useState } from "react";
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.includes(searchTerm.toLocaleLowerCase())
-  );
-
+  const filteredContacts = useMemo(() => {
+    return contacts.filter((contact) =>
+      contact.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
+    );
+  }, [contacts, searchTerm]);
   useEffect(() => {
     fetch(`http://localhost:3000/contacts?orderBy=${orderBy}`)
       .then(async (response) => {
