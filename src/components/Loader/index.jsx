@@ -1,7 +1,7 @@
-import { Overlay } from "./styles";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom';
+import { Overlay } from './styles';
 
 export default function Loader({ isLoading }) {
   if (!isLoading) {
@@ -10,9 +10,9 @@ export default function Loader({ isLoading }) {
 
   return ReactDOM.createPortal(
     <Overlay>
-      <div className="loader"></div>
+      <div className="loader" />
     </Overlay>,
-    document.getElementById("loader-root")
+    document.getElementById('loader-root'),
   );
 }
 

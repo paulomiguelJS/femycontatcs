@@ -1,52 +1,57 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { Link } from 'react-router-dom';
+import { useEffect, useState, useMemo } from 'react';
 
-import Modal from "../../components/Modal";
-import delay from "../../utils/delay";
-import Loader from "../../components/Loader";
+import Modal from '../../components/Modal';
+import delay from '../../utils/delay';
+import Loader from '../../components/Loader';
 import {
   Container,
   InputSearchContainer,
   Header,
   ListHeader,
   Card,
-} from "./styles";
+} from './styles';
 
-import arrow from "../../assets/images/icons/arrow.svg";
-import edit from "../../assets/images/icons/edit.svg";
-import trash from "../../assets/images/icons/trash.svg";
+import arrow from '../../assets/images/icons/arrow.svg';
+import edit from '../../assets/images/icons/edit.svg';
+import trash from '../../assets/images/icons/trash.svg';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
-  const [orderBy, setOrderBy] = useState("asc");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [orderBy, setOrderBy] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const filteredContacts = useMemo(() => {
-    return contacts.filter((contact) =>
-      contact.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
-    );
-  }, [contacts, searchTerm]);
+  const filteredContacts = useMemo(
+    () => contacts.filter((contact) => contact.name
+      .toLocaleLowerCase()
+      .includes(searchTerm.toLocaleLowerCase())),
+    [contacts, searchTerm],
+  );
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch(`http://localhost:3000/contacts?orderBy=${orderBy}`)
-      .then(async (response) => {
+    async function loadContacts() {
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `http://localhost:3000/contacts?orderBy=${orderBy}`,
+        );
+
         await delay(1000);
         const json = await response.json();
         setContacts(json);
-      })
-      .catch((error) => {
-        console.log("erro", error);
-      })
-      .finally(() => {
+      } catch (error) {
+        console.log('error', error);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    }
+
+    loadContacts();
   }, [orderBy]);
 
-
   function handleToggleOrderBy() {
-    setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
+    setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'));
   }
 
   function handleChangeSearchTerm(event) {
@@ -67,7 +72,7 @@ export default function Home() {
       <Header>
         <strong>
           {filteredContacts.length}
-          {filteredContacts.length === 1 ? " contact" : " contacts"}
+          {filteredContacts.length === 1 ? ' contact' : ' contacts'}
         </strong>
         <Link to="/new">New contact</Link>
       </Header>
