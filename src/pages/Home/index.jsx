@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 
 import Modal from '../../components/Modal';
-import delay from '../../utils/delay';
 import Loader from '../../components/Loader';
 import {
   Container,
@@ -15,6 +14,7 @@ import {
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+import ContactsService from '../../services/ContactsService';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
@@ -33,13 +33,8 @@ export default function Home() {
     async function loadContacts() {
       try {
         setIsLoading(true);
-        const response = await fetch(
-          `http://localhost:3000/contacts?orderBy=${orderBy}`,
-        );
-
-        await delay(1000);
-        const json = await response.json();
-        setContacts(json);
+        const contactsList = await ContactsService.listContacts(orderBy);
+        setContacts(contactsList);
       } catch (error) {
         console.log('error', error);
       } finally {
