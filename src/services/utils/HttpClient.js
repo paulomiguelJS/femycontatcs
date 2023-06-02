@@ -9,10 +9,17 @@ class HttpClient {
     await delay(1000);
     const response = await fetch(`${this.baseURL}${[path]}`);
 
-    if (response.ok) {
-      return response.json();
+    let body = null;
+    const contentType = response.headers.get('Content-Type');
+    if (contentType.includes('application/json')) {
+      body = await response.json();
     }
-    throw new Error('API error');
+
+    if (response.ok) {
+      return body;
+    }
+
+    throw new Error(body.error);
   }
 }
 
