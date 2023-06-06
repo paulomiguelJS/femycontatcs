@@ -19,7 +19,7 @@ class HttpClient {
       return body;
     }
 
-    throw new Error(body.error);
+    throw new Error(body?.error || `#{response.status} - ${response.status}`);
   }
 }
 
