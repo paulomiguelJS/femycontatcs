@@ -14,6 +14,8 @@ import {
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+
+import APIError from '../../error/APIError';
 import ContactsService from '../../services/ContactsService';
 
 export default function Home() {
@@ -39,6 +41,7 @@ export default function Home() {
         setContacts(contactsList);
       } catch (error) {
         console.log('error', error);
+        console.log(error instanceof APIError);
       } finally {
         setIsLoading(false);
       }
